@@ -15,7 +15,7 @@ import (
 
 	"github.com/upbound/upjet/pkg/terraform"
 
-	"github.com/upbound/upjet-provider-template/apis/v1beta1"
+	"github.com/skilldus/provider-contrail/apis/v1beta1"
 )
 
 const (
@@ -24,7 +24,18 @@ const (
 	errGetProviderConfig    = "cannot get referenced ProviderConfig"
 	errTrackUsage           = "cannot track ProviderConfig usage"
 	errExtractCredentials   = "cannot extract credentials"
-	errUnmarshalCredentials = "cannot unmarshal template credentials as JSON"
+	errUnmarshalCredentials = "cannot unmarshal contrail credentials as JSON"
+
+	// provider configuration
+	server            = "server"
+	port              = "port"
+	authURL           = "auth_url"
+	username          = "username"
+	password          = "password"
+	tenantName        = "tenant_name"
+	domainName        = "domain_name"
+	projectName       = "project_name"
+	projectDomainName = "project_domain_name"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -63,10 +74,44 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		}
 
 		// Set credentials in Terraform provider configuration.
-		/*ps.Configuration = map[string]any{
-			"username": creds["username"],
-			"password": creds["password"],
-		}*/
+		ps.Configuration = map[string]any{}
+
+		if v, ok := creds[server]; ok {
+			ps.Configuration[server] = v
+		}
+
+		if v, ok := creds[port]; ok {
+			ps.Configuration[port] = v
+		}
+
+		if v, ok := creds[authURL]; ok {
+			ps.Configuration[authURL] = v
+		}
+
+		if v, ok := creds[username]; ok {
+			ps.Configuration[username] = v
+		}
+
+		if v, ok := creds[password]; ok {
+			ps.Configuration[password] = v
+		}
+
+		if v, ok := creds[tenantName]; ok {
+			ps.Configuration[tenantName] = v
+		}
+
+		if v, ok := creds[domainName]; ok {
+			ps.Configuration[domainName] = v
+		}
+
+		if v, ok := creds[projectName]; ok {
+			ps.Configuration[projectName] = v
+		}
+
+		if v, ok := creds[projectDomainName]; ok {
+			ps.Configuration[projectDomainName] = v
+		}
+
 		return ps, nil
 	}
 }
